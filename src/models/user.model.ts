@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "../repositories/user.repository";
 
-const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+s/;
+const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const userSchema: Schema<IUser> = new mongoose.Schema(
   {
