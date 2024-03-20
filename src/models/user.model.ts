@@ -1,4 +1,6 @@
+import "dotenv/config";
 import bcrypt from "bcryptjs";
+import jwt, { Secret } from "jsonwebtoken";
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "../repositories/user.repository";
 
@@ -57,6 +59,22 @@ userSchema.pre<IUser>("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
+//sign access token
+userSchema.methods.SignAccessToken = function () {
+  return jwt.sign(
+    { id: this._id },
+    (process.env.JWT_ACCESS_TOKEN as Secret) || ""
+  );
+};
+
+//sign refresh token
+userSchema.methods.SignRefreshToken = function () {
+  return jwt.sign(
+    { id: this._id },
+    (process.env.JWT_REFRESH_TOKEN as Secret) || ""
+  );
+};
 
 // compare password before login
 userSchema.methods.comparePassword = async function (

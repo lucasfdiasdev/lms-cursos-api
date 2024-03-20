@@ -8,6 +8,7 @@ import { userModel } from "../models/user.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
 import { IUser } from "../repositories/user.repository";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
+import { sendToken } from "../utils/jwt";
 
 interface IRegistrationBody {
   name: string;
@@ -72,7 +73,7 @@ export const createActivationToken = (user: any): IActivationToken => {
   const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const token = jwt.sign(
     { user, activationCode },
-    process.env.JWT_SECRET as Secret,
+    process.env.JWT_ACTIVATION_SECRET as Secret,
     {
       expiresIn: "5m",
     }
@@ -95,7 +96,7 @@ export const activateUser = CatchAsyncError(
 
       const newUser: { user: IUser; activationCode: string } = jwt.verify(
         activation_token,
-        process.env.JWT_SECRET as string
+        process.env.JWT_ACTIVATION_SECRET as string
       ) as { user: IUser; activationCode: string };
 
       if (newUser.activationCode !== activation_code) {
@@ -119,6 +120,40 @@ export const activateUser = CatchAsyncError(
       res.status(201).json({
         success: true,
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
+    }
+  }
+);
+
+// login user
+interface ILoginRequest {
+  email: string;
+  password: string;
+}
+
+export const loginUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body as ILoginRequest;
+
+      if (!email || !password) {
+        return next(new ErrorHandler(400, "Please enter email and password"));
+      }
+
+      const user = await userModel.findOne({ email }).select("+password");
+
+      if (!user) {
+        return next(new ErrorHandler(400, "Invalid email or password"));
+      }
+
+      const isPasswordMatched = await user.comparePassword(password);
+
+      if (!isPasswordMatched) {
+        return next(new ErrorHandler(400, "Invalid password"));
+      }
+
+      sendToken(user, 200, res);
     } catch (error: any) {
       return next(new ErrorHandler(400, error.message));
     }
