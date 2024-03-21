@@ -64,7 +64,10 @@ userSchema.pre<IUser>("save", async function (next) {
 userSchema.methods.SignAccessToken = function () {
   return jwt.sign(
     { id: this._id },
-    (process.env.JWT_ACCESS_TOKEN as Secret) || ""
+    (process.env.JWT_ACCESS_TOKEN as Secret) || "",
+    {
+      expiresIn: "5m",
+    }
   );
 };
 
@@ -72,7 +75,10 @@ userSchema.methods.SignAccessToken = function () {
 userSchema.methods.SignRefreshToken = function () {
   return jwt.sign(
     { id: this._id },
-    (process.env.JWT_REFRESH_TOKEN as Secret) || ""
+    (process.env.JWT_REFRESH_TOKEN as Secret) || "",
+    {
+      expiresIn: "3d",
+    }
   );
 };
 

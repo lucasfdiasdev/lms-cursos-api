@@ -4,6 +4,7 @@ import {
   logoutUser,
   activateUser,
   registrationUser,
+  updateAccessToken,
 } from "../controllers/user.controller";
 import { isAuthenticated } from "../middleware/auth";
 
@@ -13,3 +14,4 @@ userRouter.post("/registration", registrationUser);
 userRouter.post("/activate-user", activateUser);
 userRouter.post("/login-user", loginUser);
 userRouter.get("/logout", isAuthenticated, logoutUser);
+userRouter.get("/refreshtoken", updateAccessToken);
