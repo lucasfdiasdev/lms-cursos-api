@@ -14,6 +14,7 @@ import {
   accessTokenOptions,
   refreshTokenOptions,
 } from "../utils/jwt";
+import { getUserById } from "../services/user-service";
 
 interface IRegistrationBody {
   name: string;
@@ -231,6 +232,18 @@ export const updateAccessToken = CatchAsyncError(
         success: "success",
         accessToken,
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
+    }
+  }
+);
+
+// get user info
+export const getUserInfo = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?._id;
+      getUserById(userId, res);
     } catch (error: any) {
       return next(new ErrorHandler(400, error.message));
     }
