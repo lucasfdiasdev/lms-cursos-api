@@ -3,12 +3,13 @@ import "dotenv/config";
 import path from "path";
 import jwt, { Secret } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
+import { redis } from "../config/redis";
+import { sendToken } from "../utils/jwt";
 import { sendMail } from "../utils/sendMail";
 import { userModel } from "../models/user.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
 import { IUser } from "../repositories/user.repository";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
-import { sendToken } from "../utils/jwt";
 
 interface IRegistrationBody {
   name: string;
@@ -154,6 +155,27 @@ export const loginUser = CatchAsyncError(
       }
 
       sendToken(user, 200, res);
+    } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
+    }
+  }
+);
+
+//logout user
+export const logoutUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.cookie("access_token", "", { maxAge: 1 });
+      res.cookie("refresh_token", "", { maxAge: 1 });
+
+      // delete user by id in redis
+      const userId = req.user?._id || "";
+      await redis.del(userId);
+
+      res.status(200).json({
+        success: true,
+        message: "Logged out successfully",
+      });
     } catch (error: any) {
       return next(new ErrorHandler(400, error.message));
     }
