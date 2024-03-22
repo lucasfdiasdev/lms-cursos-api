@@ -34,8 +34,6 @@ export const isAuthenticated = CatchAsyncError(
 
     const user = await redis.get(decoded.id);
 
-    console.log(user);
-
     if (!user) {
       return next(new ErrorHandler(400, "User not found"));
     }
