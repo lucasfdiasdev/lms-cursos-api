@@ -1,13 +1,14 @@
 import { Document } from "mongoose";
+import { IUser } from "./user.repository";
 
 export interface IComment extends Document {
-  user: object;
-  comment: string;
-  commentReplies: IComment[];
+  user: IUser;
+  question: string;
+  questionReplies: IComment[];
 }
 
 export interface IReview extends Document {
-  user: object;
+  user: IUser;
   rating: number;
   comment: string;
   commentReplies: IComment[];
