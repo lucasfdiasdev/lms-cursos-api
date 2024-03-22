@@ -9,6 +9,7 @@ import {
   getCourseByUser,
   getSingleCourse,
   addReview,
+  addReplyToReview,
 } from "../controllers/course.controller";
 
 export const courseRouter = express.Router();
@@ -31,3 +32,9 @@ courseRouter.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 courseRouter.put("/add-question", isAuthenticated, addQuestion);
 courseRouter.put("/add-answer", isAuthenticated, addAnswer);
 courseRouter.put("/add-review/:id", isAuthenticated, addReview);
+courseRouter.put(
+  "/add-reply-review",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  addReplyToReview
+);
