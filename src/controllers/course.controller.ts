@@ -7,9 +7,9 @@ import { redis } from "../config/redis";
 import { sendMail } from "../utils/sendMail";
 import { courseModel } from "../models/course.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
-import { createCourse } from "../services/course-service";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
 import { notificationModel } from "../models/notification.model";
+import { createCourse, getAllCoursesService } from "../services/course-service";
 
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -103,8 +103,8 @@ export const getSingleCourse = CatchAsyncError(
   }
 );
 
-// get all courses --- without purchasing
-export const getAllCourses = CatchAsyncError(
+// get courses --- without purchasing
+export const getCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const isCacheExist = await redis.get("allCourses");
@@ -269,7 +269,6 @@ export const addAnswer = CatchAsyncError(
       await course?.save();
 
       if (req.user?._id === question.user._id) {
-        // create a notification
         // add notification question to courseContent
         await notificationModel.create({
           user: req.user?._id,
@@ -415,6 +414,17 @@ export const addReplyToReview = CatchAsyncError(
       });
     } catch (error: any) {
       return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
+
+// get all courses --- only for admin
+export const getAllCourses = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCoursesService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
     }
   }
 );
