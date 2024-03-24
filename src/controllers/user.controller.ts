@@ -15,7 +15,11 @@ import {
   accessTokenOptions,
   refreshTokenOptions,
 } from "../utils/jwt";
-import { getAllUsersService, getUserById } from "../services/user-service";
+import {
+  getAllUsersService,
+  getUserById,
+  updateUserRoleService,
+} from "../services/user-service";
 
 interface IRegistrationBody {
   name: string;
@@ -63,7 +67,7 @@ export const registrationUser = CatchAsyncError(
           activationToken: activationToken.token,
         });
       } catch (error: any) {
-        return next(new ErrorHandler(400, error.message));
+        return next(new ErrorHandler(500, error.message));
       }
     } catch (error: any) {
       return next(new ErrorHandler(500, error.message));
@@ -426,7 +430,19 @@ export const getAllUsers = CatchAsyncError(
     try {
       getAllUsersService(res);
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
+
+// update user role --- only for admin
+export const updateUserRole = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, role } = req.body;
+      updateUserRoleService(res, id, role);
+    } catch (error: any) {
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
