@@ -9,6 +9,7 @@ import { courseModel } from "../models/course.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
 import { createCourse } from "../services/course-service";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
+import { notificationModel } from "../models/notification.model";
 
 export const uploadCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -135,7 +136,7 @@ export const getAllCourses = CatchAsyncError(
   }
 );
 
-// gt course Content --- only for valid user
+// get course Content --- only for valid user
 export const getCourseByUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -200,6 +201,13 @@ export const addQuestion = CatchAsyncError(
       // add this question to our course content
       courseContent.questions.push(newQuestion);
 
+      // add notification question to courseContent
+      await notificationModel.create({
+        user: req.user?._id,
+        title: "New question received",
+        message: `You have a new question in ${courseContent?.title}`,
+      });
+
       // save the updated course
       await course?.save();
 
@@ -262,6 +270,12 @@ export const addAnswer = CatchAsyncError(
 
       if (req.user?._id === question.user._id) {
         // create a notification
+        // add notification question to courseContent
+        await notificationModel.create({
+          user: req.user?._id,
+          title: "New question reply received",
+          message: `You have a new question reply in ${courseContent?.title}`,
+        });
       } else {
         const data = {
           name: question.user.name,
