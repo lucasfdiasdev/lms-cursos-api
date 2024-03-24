@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { userRouter } from "../routes/user.route";
 import { orderRouter } from "../routes/order.route";
 import { courseRouter } from "../routes/course.route";
+import { layoutRouter } from "../routes/layout.route";
 import { analyticsRouter } from "../routes/analytics.route";
 import { notificationRouter } from "../routes/notification.route";
 
@@ -21,6 +22,7 @@ app.use("/api/v1", courseRouter);
 app.use("/api/v1", notificationRouter);
 app.use("/api/v1", orderRouter);
 app.use("/api/v1", analyticsRouter);
+app.use("/api/v1", layoutRouter);
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
