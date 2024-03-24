@@ -3,12 +3,12 @@ import path from "path";
 import { NextFunction, Request, Response } from "express";
 import { sendMail } from "../utils/sendMail";
 import { userModel } from "../models/user.model";
-import { newOrder } from "../services/order-service";
 import { courseModel } from "../models/course.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
 import { IOrder } from "../repositories/order.respoitory";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
 import { notificationModel } from "../models/notification.model";
+import { getAllOrdersService, newOrder } from "../services/order-service";
 
 // create order
 export const createOder = CatchAsyncError(
@@ -88,6 +88,17 @@ export const createOder = CatchAsyncError(
       newOrder(data, res, next);
     } catch (error: any) {
       return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
+
+// get all orders --- only for admin
+export const getAllOrders = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllOrdersService(res);
+    } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
     }
   }
 );
