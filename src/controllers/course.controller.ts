@@ -428,3 +428,29 @@ export const getAllCourses = CatchAsyncError(
     }
   }
 );
+
+// delete course --- only for admin
+export const deleteCourse = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const course = await courseModel.findById(id);
+
+      if (!course) {
+        return next(new ErrorHandler(404, "User not found"));
+      }
+
+      await course.deleteOne({ id });
+
+      // delete course from the redis
+      await redis.del(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Course deleted successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
