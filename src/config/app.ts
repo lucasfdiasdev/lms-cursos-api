@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { userRouter } from "../routes/user.route";
 import { orderRouter } from "../routes/order.route";
 import { courseRouter } from "../routes/course.route";
+import { notificationRouter } from "../routes/notification.route";
 
 export const app = express();
 
@@ -16,7 +17,7 @@ app.use(cors());
 // app api routes
 app.use("/api/v1", userRouter);
 app.use("/api/v1", courseRouter);
-``;
+app.use("/api/v1", notificationRouter);
 app.use("/api/v1", orderRouter);
 
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
