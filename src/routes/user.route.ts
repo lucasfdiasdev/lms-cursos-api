@@ -10,8 +10,9 @@ import {
   updateUserInfo,
   updatePassword,
   updateAvatar,
+  getAllUsers,
 } from "../controllers/user.controller";
-import { isAuthenticated } from "../middleware/auth";
+import { authorizeRoles, isAuthenticated } from "../middleware/auth";
 
 export const userRouter = express.Router();
 
@@ -25,3 +26,9 @@ userRouter.get("/get-user", isAuthenticated, getUserInfo);
 userRouter.put("/update-user", isAuthenticated, updateUserInfo);
 userRouter.put("/update-user-password", isAuthenticated, updatePassword);
 userRouter.put("/update-user-avatar", isAuthenticated, updateAvatar);
+userRouter.get(
+  "/get-all-users",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  getAllUsers
+);

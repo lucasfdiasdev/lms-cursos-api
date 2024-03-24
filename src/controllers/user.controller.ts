@@ -15,7 +15,7 @@ import {
   accessTokenOptions,
   refreshTokenOptions,
 } from "../utils/jwt";
-import { getUserById } from "../services/user-service";
+import { getAllUsersService, getUserById } from "../services/user-service";
 
 interface IRegistrationBody {
   name: string;
@@ -66,7 +66,7 @@ export const registrationUser = CatchAsyncError(
         return next(new ErrorHandler(400, error.message));
       }
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -128,7 +128,7 @@ export const activateUser = CatchAsyncError(
         success: true,
       });
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -162,7 +162,7 @@ export const loginUser = CatchAsyncError(
 
       sendToken(user, 200, res);
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -183,7 +183,7 @@ export const logoutUser = CatchAsyncError(
         message: "Logged out successfully",
       });
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -236,7 +236,7 @@ export const updateAccessToken = CatchAsyncError(
         accessToken,
       });
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -248,7 +248,7 @@ export const getUserInfo = CatchAsyncError(
       const userId = req.user?._id;
       getUserById(userId, res);
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -277,7 +277,7 @@ export const socialAuth = CatchAsyncError(
         sendToken(user, 200, res);
       }
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -359,7 +359,7 @@ export const updatePassword = CatchAsyncError(
         user,
       });
     } catch (error: any) {
-      return next(new ErrorHandler(400, error.message));
+      return next(new ErrorHandler(500, error.message));
     }
   }
 );
@@ -414,6 +414,17 @@ export const updateAvatar = CatchAsyncError(
         success: true,
         user,
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(500, error.message));
+    }
+  }
+);
+
+// get all users --- only for admin
+export const getAllUsers = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllUsersService(res);
     } catch (error: any) {
       return next(new ErrorHandler(400, error.message));
     }
