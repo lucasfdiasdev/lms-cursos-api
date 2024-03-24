@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { redis } from "../config/redis";
 import { CatchAsyncError } from "./catchAsyncError";
 import { ErrorHandler } from "../utils/ErrorHandler";
-import { IUser } from "../repositories/user.repository";
+import { IUser } from "../interfaces/user.interface";
 
 // declare global
 declare global {

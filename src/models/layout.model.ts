@@ -1,29 +1,10 @@
-import { Schema, model, Document } from "mongoose";
-
-interface FaqItem extends Document {
-  question: string;
-  answer: string;
-}
-
-interface Category extends Document {
-  title: string;
-}
-
-interface BannerImage extends Document {
-  public_id: string;
-  url: string;
-}
-
-interface Layout extends Document {
-  type: string;
-  faq: FaqItem[];
-  categories: Category[];
-  banner: {
-    image: BannerImage;
-    title: string;
-    subTitle: string;
-  };
-}
+import { Schema, model } from "mongoose";
+import {
+  BannerImage,
+  Category,
+  FaqItem,
+  Layout,
+} from "../interfaces/layout.interface";
 
 const faqSchema = new Schema<FaqItem>({
   question: { type: String },

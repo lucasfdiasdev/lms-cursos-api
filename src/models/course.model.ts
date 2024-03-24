@@ -5,7 +5,7 @@ import {
   IReview,
   IComment,
   ICourseData,
-} from "../repositories/course.repository";
+} from "../interfaces/course.interface";
 
 const reviewSchema = new Schema<IReview>({
   user: Object,

@@ -5,7 +5,7 @@ import { sendMail } from "../utils/sendMail";
 import { userModel } from "../models/user.model";
 import { courseModel } from "../models/course.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
-import { IOrder } from "../repositories/order.respoitory";
+import { IOrder } from "../interfaces/order.interface";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
 import { notificationModel } from "../models/notification.model";
 import { getAllOrdersService, newOrder } from "../services/order-service";

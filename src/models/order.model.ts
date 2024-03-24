@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IOrder } from "../repositories/order.respoitory";
+import { IOrder } from "../interfaces/order.interface";
 
 const orderSchema = new Schema<IOrder>(
   {

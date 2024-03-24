@@ -2,7 +2,7 @@ import "dotenv/config";
 import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
 import mongoose, { Model, Schema } from "mongoose";
-import { IUser } from "../repositories/user.repository";
+import { IUser } from "../interfaces/user.interface";
 
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

@@ -8,7 +8,7 @@ import { redis } from "../config/redis";
 import { sendMail } from "../utils/sendMail";
 import { userModel } from "../models/user.model";
 import { ErrorHandler } from "../utils/ErrorHandler";
-import { IUser } from "../repositories/user.repository";
+import { IUser } from "../interfaces/user.interface";
 import { CatchAsyncError } from "../middleware/catchAsyncError";
 import {
   sendToken,
