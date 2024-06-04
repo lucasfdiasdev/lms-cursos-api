@@ -28,7 +28,7 @@ interface IRegistrationBody {
   avatar?: string;
 }
 
-export const registrationUser = CatchAsyncError(
+export const registerUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, email, password } = req.body;
@@ -295,17 +295,9 @@ interface IUpdateUserInfo {
 export const updateUserInfo = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { name, email } = req.body as IUpdateUserInfo;
+      const { name } = req.body as IUpdateUserInfo;
       const userId = req.user?._id;
       const user = await userModel.findById(userId);
-
-      if (email && user) {
-        const isEmailExist = await userModel.findOne({ email });
-        if (isEmailExist) {
-          return next(new ErrorHandler(400, "Email already exists"));
-        }
-        user.email = email;
-      }
 
       if (name && user) {
         user.name = name;

@@ -3,7 +3,7 @@ import {
   loginUser,
   logoutUser,
   activateUser,
-  registrationUser,
+  registerUser,
   updateAccessToken,
   getUserInfo,
   socialAuth,
@@ -18,9 +18,9 @@ import { authorizeRoles, isAuthenticated } from "../middleware/auth";
 
 export const userRouter = express.Router();
 
-userRouter.post("/registration", registrationUser);
+userRouter.post("/register", registerUser);
 userRouter.post("/activate-user", activateUser);
-userRouter.post("/login-user", loginUser);
+userRouter.post("/login", loginUser);
 userRouter.post("/social-auth", socialAuth);
 userRouter.get("/logout", isAuthenticated, logoutUser);
 userRouter.get("/refreshtoken", updateAccessToken);
